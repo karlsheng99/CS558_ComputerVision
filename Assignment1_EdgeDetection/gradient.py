@@ -2,7 +2,14 @@ import numpy as np
 import convolution
 
 
-def sobel_filter(source, threshold=0):
+def compute_gradient(source, threshold=0):
+    """
+    :param source: image pixel matrix
+    :param threshold: pixel intensity (default=0)
+    :return: gradient_magnitude matrix & gradient_direction matrix
+    """
+
+    # Sobel filter
     v_kernel = np.array([[-1, 0, 1],
                          [-2, 0, 2],
                          [-1, 0, 1]])

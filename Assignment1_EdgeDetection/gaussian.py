@@ -2,6 +2,12 @@ import numpy as np
 
 
 def gaussian_filter(sigma):
+    """
+    :param sigma: sigma of Gaussian filter
+    :return: Gaussian kernel
+    """
+
+    # Rule of thumb for Gaussian
     size = 6 * sigma + 1
 
     kernel = np.zeros((size, size))

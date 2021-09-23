@@ -2,24 +2,37 @@ import numpy as np
 from PIL import Image
 import gaussian
 import convolution
-import sobel
+import gradient
 import suppression
 
 
 def main():
-    im = Image.open('images/red.pgm')
+    """ TODO:
+        - argument
+            - filename
+                - default = kangaroo.pgm?
+            - sigma
+                - convolution*2 = sqrt(2)*sigma (sigma = 2^n preferred)
+                - need for loop
+                - default = 1
+            - threshold
+                - default = 80
+        - save file
+            - applied gaussian (smoothed image; name: sigma)
+            - applied sobel filter (smoothed + edge detected image; name: sigma + threshold)
+            - applied non-max suppression (suppressed image; name: sigma + threshold)
+        -pledge
+    """
+    threshold = 80
+    im = Image.open('images/kangaroo.pgm')
     im.show()
     # im.save('in.png')
     source = np.array(im)
     im.close()
     kernel = gaussian.gaussian_filter(1)
     smoothed_pix = convolution.convolve(source, kernel)
-    # out_pic = Image.fromarray(out_pix)
-    # out_pic.show()
-    # out_pic.convert("L").save('myout5.png')
-    #sobel.sobel_filter(smoothed_pix)
-    #out_pix = sobel.get_gradient_magnitude(80)
-    out_pix = suppression.suppression(smoothed_pix, 80)
+    gradient_magnitude, gradient_direction = gradient.compute_gradient(smoothed_pix, threshold)
+    out_pix = suppression.non_max_suppress(gradient_magnitude, gradient_direction)
     out_pic = Image.fromarray(out_pix)
     out_pic.show()
 

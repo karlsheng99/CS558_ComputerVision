@@ -2,6 +2,12 @@ import numpy as np
 
 
 def convolve(source, kernel):
+    """
+    :param source: image pixel matrix
+    :param kernel: kernel matrix
+    :return: convolved matrix
+    """
+
     row, col = source.shape
     kernel_size = kernel.shape[0]
     new_matrix = np.zeros((row, col))
