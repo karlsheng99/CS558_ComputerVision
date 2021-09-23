@@ -69,20 +69,49 @@ def main():
     sigma = 4
     threshold = 80
 
-    edge_detection(filename, sigma, threshold)
+    if len(sys.argv) == 1:
+        print("Run:", sys.argv[0], "<file = 'red.pgm'> <sigma = 1> <threshold = 80> by default")
+    elif len(sys.argv) >= 2:
+        file_path = "images/" + sys.argv[1]
+        if not Path(file_path).exists():
+            print("Error: file 'images/" + sys.argv[1] + "' does not exist")
+            return 1
+        else:
+            filename = sys.argv[1]
 
-    # if len(sys.argv) == 1:
-    #     print("Run:", sys.argv[0], "file='images/red.pgm' sigma=1 threshold=80 by default")
-    # elif len(sys.argv) >= 2:
-    #     file_path = "images/" + sys.argv[1]
-    #     if not Path(file_path).exists():
-    #         print("Error: file does not exist")
-    #         return 1
-    #     else:
-    #         filename = sys.argv[1]
-    #
-    #     if len(sys.argv) == 2:
-    #         print("Run:", sys.argv[0], sys.argv[1], "sigma=1 threshold=80 by default")
+        if len(sys.argv) == 2:
+            print("Run:", sys.argv[0], sys.argv[1], "<sigma = 1> <threshold = 80> by default")
+        elif len(sys.argv) >= 3:
+            if not sys.argv[2].isdigit():
+                print("Error: sigma must be a positive integer")
+                return 1
+            else:
+                sigma = int(sys.argv[2])
+
+                if sigma <= 0 or sigma > 10:
+                    print("Error: sigma must be in range 1-10 (sigma = 2^n is preferred [1, 2, 4, 8])")
+                    return 1
+
+            if len(sys.argv) == 3:
+                print("Run: ", sys.argv[0], sys.argv[1], sys.argv[2], "<threshold = 80> by default")
+            elif len(sys.argv) == 4:
+                if not sys.argv[3].isdigit():
+                    print("Error: threshold must be a positive integer")
+                    return 1
+                else:
+                    threshold = int(sys.argv[3])
+
+                    if threshold < 0 or threshold > 255:
+                        print("Error: threshold must be in range 0-255")
+                        return 1
+                    else:
+                        print("Run:", sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3])
+            else:
+                print("Error: too many input arguments")
+                print("Usage: python <file (default = 'red.pgm')> <sigma (default = 1)> <threshold (default = 80)>")
+                return 1
+
+    edge_detection(filename, sigma, threshold)
 
 
 if __name__ == '__main__':
