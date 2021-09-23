@@ -2,7 +2,7 @@ import numpy as np
 
 
 def gaussian_filter(sigma):
-    size = 6 * sigma - 1
+    size = 6 * sigma + 1
 
     kernel = np.zeros((size, size))
     for i in range(size):
