@@ -66,7 +66,7 @@ def main():
     """
 
     filename = 'red.pgm'
-    sigma = 4
+    sigma = 1
     threshold = 80
 
     if len(sys.argv) == 1:
