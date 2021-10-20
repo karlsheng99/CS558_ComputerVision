@@ -24,7 +24,7 @@ def non_max_suppress(det_matrix):
     return suppressed_matrix
 
 
-def hessian(source, threshold=100000):
+def hessian_detector(source, threshold):
     # Sobel filter
     v_kernel = np.array([[-1, 0, 1],
                          [-2, 0, 2],

@@ -89,7 +89,7 @@ def ransac(points, used_subset, min_inlier, dist_threshold):
     return best_subset
 
 
-def ransac_findlines(image, hessian_matrix, min_inlier, dist_threshold):
+def ransac_findlines(image, hessian_matrix, min_inlier, dist_threshold, result_dir):
     points = detect_points(hessian_matrix)
     used_subset = np.array([])
     lines = []
@@ -137,5 +137,5 @@ def ransac_findlines(image, hessian_matrix, min_inlier, dist_threshold):
 
     plt.show()
 
-    fig.savefig('ransac.png')
+    fig.savefig(result_dir + 'ransac.png')
 

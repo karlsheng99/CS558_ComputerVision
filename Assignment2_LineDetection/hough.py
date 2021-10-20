@@ -40,7 +40,7 @@ def find_maxima(accumulator):
     return [point_1, point_2, point_3, point_4]
 
 
-def plot_lines(image, size, polar_coord):
+def plot_lines(image, size, polar_coord, result_dir):
     max_y, max_x = size
 
     fig, ax = plt.subplots(1)
@@ -70,10 +70,10 @@ def plot_lines(image, size, polar_coord):
 
         plt.plot([x_i, x_f], [y_i, y_f], color='red', linewidth=1)
     plt.show()
-    fig.savefig('hough.png')
+    fig.savefig(result_dir + 'hough.png')
 
 
-def hough_transform(image, hessian_matrix):
+def hough_findlines(image, hessian_matrix, result_dir):
     y, x = hessian_matrix.shape
     bin_x = 181
     bin_y = np.sqrt(x * x + y * y) * 2
@@ -87,7 +87,7 @@ def hough_transform(image, hessian_matrix):
             accumulator[int(rho)][theta] += 1
 
     best_lines_polar = find_maxima(accumulator)
-    plot_lines(image, (y, x), best_lines_polar)
+    plot_lines(image, (y, x), best_lines_polar, result_dir)
 
     return accumulator * 100
 
