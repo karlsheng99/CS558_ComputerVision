@@ -138,3 +138,4 @@ def ransac_findlines(image, hessian_matrix, min_inlier, dist_threshold):
     plt.show()
 
     fig.savefig('ransac.png')
+

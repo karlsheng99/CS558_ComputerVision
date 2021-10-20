@@ -30,10 +30,10 @@ def main():
     image2 = Image.open('road.png')
     image_pix = np.array(image)
 
-    #ransac.ransac_findlines(image2, image_pix, 100, 2)
-    out_pix = hough.hough_transform(image_pix)
+    # ransac.ransac_findlines(image2, image_pix, 100, 2)
+    out_pix = hough.hough_transform(image2, image_pix)
     out = Image.fromarray(out_pix)
-    out.show()
+    out.convert("L").save('hough_space.png')
 
 
 if __name__ == '__main__':
