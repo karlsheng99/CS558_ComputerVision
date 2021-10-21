@@ -4,6 +4,11 @@ import matplotlib.patches as patches
 
 
 def detect_points(source):
+    """
+    :param source: hessian matrix
+    :return: list of coordinates of points with intensity which is not equal to 0
+    """
+
     row, col = source.shape
     points = []
     for i in range(row):
@@ -15,6 +20,12 @@ def detect_points(source):
 
 
 def find_line(point_1, point_2):
+    """
+    :param point_1: coordinate of point 1
+    :param point_2: coordinate of point 2
+    :return: slope, intercept
+    """
+
     x1, y1 = point_1
     x2, y2 = point_2
     if x1 == x2:
@@ -27,6 +38,13 @@ def find_line(point_1, point_2):
 
 
 def distance_point2line(slope, intercept, point):
+    """
+    :param slope: slope of the line
+    :param intercept: intercept of the line
+    :param point: coordinate of a point
+    :return: distance from the point to the line
+    """
+
     x2, y2 = point
     m1 = slope
     b1 = intercept
@@ -43,10 +61,15 @@ def distance_point2line(slope, intercept, point):
     return dist
 
 
-# def plot_pointsNline(source, points_subset):
-
-
 def ransac(points, used_subset, min_inlier, dist_threshold):
+    """
+    :param points: list of coordinates of points with non-zero intensity
+    :param used_subset: list of points that have been used
+    :param min_inlier: minimum required number of inliers
+    :param dist_threshold: distance threshold
+    :return: best subset of points after n iterations
+    """
+
     # Initial number of points
     s = 2
     # Distance threshold
@@ -57,8 +80,6 @@ def ransac(points, used_subset, min_inlier, dist_threshold):
     p = 0.99
     # Number of samples
     n = int(np.ceil(np.log(1 - p) / np.log(1 - (1 - e) ** s)))
-
-    # i = 0  # iteration
 
     best_subset = []
     best_num_inlier = 0
@@ -95,6 +116,14 @@ def ransac(points, used_subset, min_inlier, dist_threshold):
 
 
 def ransac_findlines(image, hessian_matrix, min_inlier, dist_threshold, result_dir):
+    """
+    :param image: source image
+    :param hessian_matrix: hessian matrix
+    :param min_inlier: minimum required number of inliers
+    :param dist_threshold: distance threshold
+    :param result_dir: plot the points and lines on the image and save it to this directory
+    """
+
     points = detect_points(hessian_matrix)
     used_subset = np.array([])
     lines = []

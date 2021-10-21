@@ -1,8 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 
 def detect_points(source):
+    """
+    :param source: hessian matrix
+    :return: list of coordinates of points with intensity which is not equal to 0
+    """
+
     row, col = source.shape
     points = []
     for i in range(row):
@@ -14,6 +20,11 @@ def detect_points(source):
 
 
 def find_maxima(accumulator):
+    """
+    :param accumulator: hough space accumulator matrix
+    :return: list of the polar coordinates of 4 points with the highest votes
+    """
+
     y, x = accumulator.shape
     point_1 = (0, 0)
     point_2 = (0, 0)
@@ -40,43 +51,54 @@ def find_maxima(accumulator):
     return [point_1, point_2, point_3, point_4]
 
 
-def plot_lines(image, size, polar_coord, result_dir):
-    max_y, max_x = size
+def plot_lines(image, points, polar_coord, result_dir):
+    """
+    :param image: source image
+    :param points: list of coordinates of points with non-zero intensity
+    :param polar_coord: list of the polar coordinates of 4 points with highest votes
+    :param result_dir: plot the points and lines on the image and save it to this directory
+    """
 
     fig, ax = plt.subplots(1)
     ax.imshow(image)
 
     for line in polar_coord:
         rho, theta = line
-        x_i = 0
-        y_i = int(rho / np.sin(np.deg2rad(theta)))
+        left_most = points[0]
+        right_most = points[0]
 
-        if y_i < 0:
-            y_i = 0
-            x_i = int(rho / np.cos(np.deg2rad(theta)))
-        elif y_i >= max_y:
-            y_i = max_y - 1
-            x_i = int((rho - y_i * np.sin(np.deg2rad(theta))) / np.cos(np.deg2rad(theta)))
+        for point in points:
+            y, x = point
+            if int(x * np.cos(np.deg2rad(theta)) + y * np.sin(np.deg2rad(theta))) == rho:
+                rect = patches.Rectangle((x, y), 3, 3, facecolor='r')
+                ax.add_patch(rect)
 
-        x_f = max_x - 1
-        y_f = int((rho - x_f * np.cos(np.deg2rad(theta))) / np.sin(np.deg2rad(theta)))
+                if x < left_most[1]:
+                    left_most = point
+                elif x > right_most[1]:
+                    right_most = point
 
-        if y_f < 0:
-            y_f = 0
-            x_f = int(rho / np.cos(np.deg2rad(theta)))
-        elif y_f >= max_y:
-            y_f = max_y - 1
-            x_f = int((rho - y_f * np.sin(np.deg2rad(theta))) / np.cos(np.deg2rad(theta)))
+        plt.plot([left_most[1], right_most[1]], [left_most[0], right_most[0]], color='red', linewidth=1)
 
-        plt.plot([x_i, x_f], [y_i, y_f], color='red', linewidth=1)
     plt.show()
     fig.savefig(result_dir + 'hough.png')
 
 
-def hough_findlines(image, hessian_matrix, result_dir):
+def hough_findlines(image, hessian_matrix, result_dir, num_bin_x=181, num_bin_y=0):
+    """
+    :param image: source image
+    :param hessian_matrix: hessian matrix
+    :param result_dir: save file to this directory
+    :param num_bin_x: dimension of bin_x of the accumulator, default = 181 (0-180 degree)
+    :param num_bin_y: dimension of bin_y of the accumulator, default = 2*sqrt(row^2+col^2) (maximum range of rho)
+    :return: hough space accumulator matrix * 100
+    """
+
     y, x = hessian_matrix.shape
-    bin_x = 181
-    bin_y = np.sqrt(x * x + y * y) * 2
+    bin_x = num_bin_x
+    bin_y = num_bin_y
+    if num_bin_y == 0:
+        bin_y = np.sqrt(x * x + y * y) * 2
     accumulator = np.zeros((int(bin_y), bin_x))
 
     points = detect_points(hessian_matrix)
@@ -87,7 +109,7 @@ def hough_findlines(image, hessian_matrix, result_dir):
             accumulator[int(rho)][theta] += 1
 
     best_lines_polar = find_maxima(accumulator)
-    plot_lines(image, (y, x), best_lines_polar, result_dir)
+    plot_lines(image, points, best_lines_polar, result_dir)
 
     return accumulator * 100
 

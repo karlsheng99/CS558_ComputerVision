@@ -29,7 +29,7 @@ def pre_processing(source_matrix, sigma, threshold):
     return hessain_matrix
 
 
-def line_detection(sigma, threshold):
+def line_detection(sigma=1, threshold=120000, min_inlier=30, dist_threshold=2, num_bin_x=181, num_bin_y=0):
     source_image = Image.open('road.png')
     result_dir = 'results/'
     if not Path(result_dir).exists():
@@ -40,15 +40,21 @@ def line_detection(sigma, threshold):
     hessian_image = Image.fromarray(hessian_matrix)
     hessian_image.convert("L").save(result_dir + 'hessian_sigma=' + str(sigma) + '_threshold=' + str(threshold) + '.png')
 
-    ransac.ransac_findlines(source_image, hessian_matrix, 30, 2, result_dir)
+    ransac.ransac_findlines(source_image, hessian_matrix, min_inlier, dist_threshold, result_dir)
 
-    hough_space_matrix = hough.hough_findlines(source_image, hessian_matrix, result_dir)
+    num_bin_y = num_bin_y
+    min_bin_y = np.sqrt(hessian_matrix.shape[0] ** 2 + hessian_matrix.shape[1] ** 2) * 2
+    if num_bin_y < min_bin_y:
+        num_bin_y = min_bin_y
+
+    hough_space_matrix = hough.hough_findlines(source_image, hessian_matrix, result_dir, num_bin_x, num_bin_y)
     hough_space_image = Image.fromarray(hough_space_matrix)
-    hough_space_image.convert("L").save(result_dir + 'hough_space.png')
+
+    hough_space_image.convert("L").save(result_dir + 'hough_space_bin-x=' + str(int(num_bin_x)) + '_bin-y=' + str(int(num_bin_y)) + '.png')
 
 
 def main():
-    line_detection(1, 120000)
+    line_detection()
 
 
 if __name__ == '__main__':

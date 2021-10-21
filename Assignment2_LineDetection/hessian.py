@@ -3,6 +3,10 @@ import convolution
 
 
 def non_max_suppress(det_matrix):
+    """
+    :param det_matrix: determinant of hessian matrix
+    :return: suppressed matrix
+    """
     row, col = det_matrix.shape
     suppressed_matrix = np.zeros((row, col))
 
@@ -25,6 +29,12 @@ def non_max_suppress(det_matrix):
 
 
 def hessian_detector(source, threshold):
+    """
+    :param source: source matrix
+    :param threshold: pixel value threshold
+    :return: suppressed determinant of hessian matrix
+    """
+
     # Sobel filter
     v_kernel = np.array([[-1, 0, 1],
                          [-2, 0, 2],
@@ -42,11 +52,6 @@ def hessian_detector(source, threshold):
     Iyy = np.array(convolution.convolve(Iy, h_kernel))
 
     det = Ixx * Iyy - Ixy * Ixy
-
-    # det_min = np.min(det)
-    # det_max = np.max(det)
-    # o_range = det_max - det_min
-    # det = (det - det_min) * 255 / o_range
 
     det = np.where(det < threshold, 0, det)
 
