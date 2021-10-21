@@ -17,8 +17,10 @@ def detect_points(source):
 def find_line(point_1, point_2):
     x1, y1 = point_1
     x2, y2 = point_2
-
-    m = (y2 - y1) / (x2 - x1)
+    if x1 == x2:
+        m = np.inf
+    else:
+        m = (y2 - y1) / (x2 - x1)
     b = y1 - m * x1
 
     return m, b
@@ -28,7 +30,10 @@ def distance_point2line(slope, intercept, point):
     x2, y2 = point
     m1 = slope
     b1 = intercept
-    m2 = - 1 / slope
+    if slope == 0:
+        m2 = - np.inf
+    else:
+        m2 = - 1 / slope
     b2 = y2 - m2 * x2
     x1 = (b2 - b1) / (m1 - m2)
     y1 = m1 * x1 + b1
