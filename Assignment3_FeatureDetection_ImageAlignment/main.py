@@ -5,12 +5,11 @@ import harris
 
 
 def main():
-    img = Image.open('AlignmentTwoViews/uttower_left.jpg')
+    img = Image.open('AlignmentTwoViews/uttower_right.jpg')
     matrix = np.array(ImageOps.grayscale(img))
     r = harris.harris_detector(matrix, 1, 3000)
     rr = Image.fromarray(r)
     rr.show()
-    print(r)
 
 
 

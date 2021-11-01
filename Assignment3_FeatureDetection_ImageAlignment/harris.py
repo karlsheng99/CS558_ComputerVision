@@ -78,9 +78,8 @@ def harris_detector(source_matrix, sigma=1, threshold_R=0):
             if R[i][j] <= threshold_R:
                 R[i][j] = 0
 
-    # suppressed_R_mat = non_max_suppress(R)
-
     strongest_1000_mat = find_1000_points(R)
+
     suppressed_R_mat = non_max_suppress(strongest_1000_mat)
 
-    return suppressed_R_mat
+    return strongest_1000_mat, suppressed_R_mat
