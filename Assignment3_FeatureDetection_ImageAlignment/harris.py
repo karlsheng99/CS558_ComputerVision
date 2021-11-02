@@ -82,4 +82,4 @@ def harris_detector(source_matrix, sigma=1, threshold_R=0):
 
     suppressed_R_mat = non_max_suppress(strongest_1000_mat)
 
-    return strongest_1000_mat, suppressed_R_mat
+    return suppressed_R_mat
