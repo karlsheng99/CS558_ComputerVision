@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 import convolution
 import harris
-import matching
+import similarity_measure
 
 
 def main():
