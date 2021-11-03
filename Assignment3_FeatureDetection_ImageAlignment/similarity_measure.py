@@ -107,4 +107,5 @@ def patch_similarity_matching(source_image_1, source_image_2, source_matrix_1, s
 
     plot_matching_features(source_image_1, source_image_2, best_20_ssd_pairs, window_size, 'SSD')
     plot_matching_features(source_image_1, source_image_2, best_20_ncc_pairs, window_size, 'NCC')
+
     return best_20_ssd_pairs, best_20_ncc_pairs

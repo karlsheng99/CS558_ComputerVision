@@ -3,6 +3,7 @@ import numpy as np
 import convolution
 import harris
 import similarity_measure
+import image_alignment
 
 
 def main():
@@ -17,7 +18,13 @@ def main():
     # rr1.show()
     # rr2 = Image.fromarray(r2)
     # rr2.convert('L').save('non-max2.png')
-    matching.patch_similarity_matching(img1, img2, matrix1, matrix2, r1, r2, 15)
+
+    ssd, ncc = similarity_measure.patch_similarity_matching(img1, img2, matrix1, matrix2, r1, r2, 15)
+
+    mat = image_alignment.affine_transform(r1, r2, ncc)
+
+    imgo = img2.transform((r2.shape[1], r2.shape[0]), Image.AFFINE, (mat[0], mat[1], mat[2], mat[3], mat[4], mat[5]))
+    imgo.show()
 
 
 if __name__ == '__main__':
