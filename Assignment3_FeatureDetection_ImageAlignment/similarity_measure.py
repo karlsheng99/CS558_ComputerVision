@@ -20,7 +20,7 @@ def detect_points(source):
     return points
 
 
-def plot_matching_features(source_image_1, source_image_2, best_20_pairs, window_size, title):
+def plot_matching_features(source_image_1, source_image_2, best_20_pairs, window_size, title, result_dir, if_rotated):
     new_img = Image.new('RGB', (source_image_1.width + source_image_2.width, source_image_1.height))
     new_img.paste(source_image_1, (0, 0))
     new_img.paste(source_image_2, (source_image_1.width, 0))
@@ -41,10 +41,12 @@ def plot_matching_features(source_image_1, source_image_2, best_20_pairs, window
         plt.plot([x1, x2 + source_image_1.width], [y1, y2], color='red', linewidth=1)
 
     plt.title(title)
-    plt.show()
+    plt.axis('off')
+    fig.savefig(result_dir + '/' + title + if_rotated + '.png')
 
 
-def patch_similarity_matching(source_image_1, source_image_2, source_matrix_1, source_matrix_2, harris_matrix_1, harris_matrix_2, window_size=7):
+def patch_similarity_matching(source_image_1, source_image_2, source_matrix_1, source_matrix_2, harris_matrix_1,
+                              harris_matrix_2, result_dir, window_size=7, if_rotated=''):
     points_1 = detect_points(harris_matrix_1)
     points_2 = detect_points(harris_matrix_2)
     window_half_size = int(window_size / 2)
@@ -105,7 +107,7 @@ def patch_similarity_matching(source_image_1, source_image_2, source_matrix_1, s
 
                     break
 
-    plot_matching_features(source_image_1, source_image_2, best_20_ssd_pairs, window_size, 'SSD')
-    plot_matching_features(source_image_1, source_image_2, best_20_ncc_pairs, window_size, 'NCC')
+    plot_matching_features(source_image_1, source_image_2, best_20_ssd_pairs, window_size, 'SSD', result_dir, if_rotated)
+    plot_matching_features(source_image_1, source_image_2, best_20_ncc_pairs, window_size, 'NCC', result_dir, if_rotated)
 
     return best_20_ssd_pairs, best_20_ncc_pairs
