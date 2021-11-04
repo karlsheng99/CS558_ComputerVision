@@ -96,6 +96,7 @@ def ransac(best_20_pairs, random_30_pairs, min_inlier, dist_threshold):
     mixed_pairs = np.append(best_20_pairs, random_30_pairs, axis=0)
 
     for i in range(n):
+        print('Iteration: ' + str(i))
         inlier_subset = random.sample(best_20_pairs, 3)
         affine_matrix = find_affine_matrix(inlier_subset)
 
@@ -104,6 +105,7 @@ def ransac(best_20_pairs, random_30_pairs, min_inlier, dist_threshold):
         for pair in mixed_pairs:
             if find_residual(affine_matrix, pair) <= dist_threshold:
                 num_inlier += 1
+                print('\t', pair[0], pair[1])
 
         if num_inlier > best_num_inlier:
             best_num_inlier = num_inlier
