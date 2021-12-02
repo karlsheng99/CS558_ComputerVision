@@ -3,7 +3,6 @@ import numpy as np
 
 def distance_pixel2center(pixel, center):
     pixel_r, pixel_g, pixel_b = pixel
-
     center_r, center_g, center_b = center
 
     distance_r = int(pixel_r) - int(center_r)
@@ -43,25 +42,30 @@ def k_mean(source_matrix):
     row, col, rgb = source_matrix.shape
     clustered_matrix = np.empty((row, col, 3))
     convergence = False
-    iteration = 0
+    iteration = 1
 
     # find 10 random pixels as initial seeds
-    initial_seeds = []
-    cluster_center = []
+    cluster_center = []  # (r, g, b) color of the cluster center pixel
 
-    while len(initial_seeds) < 10:
+    while len(cluster_center) < 10:
         x = np.random.randint(col)
         y = np.random.randint(row)
-
-        while (y, x) in initial_seeds:
-            x = np.random.randint(col)
-            y = np.random.randint(row)
-        initial_seeds.append((y, x))
 
         r = source_matrix[y][x][0]
         g = source_matrix[y][x][1]
         b = source_matrix[y][x][2]
-        cluster_center.append((r, g, b))
+        color = (r, g, b)
+
+        while color in cluster_center:
+            x = np.random.randint(col)
+            y = np.random.randint(row)
+
+            r = source_matrix[y][x][0]
+            g = source_matrix[y][x][1]
+            b = source_matrix[y][x][2]
+            color = (r, g, b)
+
+        cluster_center.append(color)
 
     while not convergence:
         print('Iteration ' + str(iteration) + ':', cluster_center)
@@ -104,4 +108,6 @@ def k_mean(source_matrix):
 
         cluster_center = cluster_mean
         iteration += 1
+
     return clustered_matrix
+

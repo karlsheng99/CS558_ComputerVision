@@ -83,6 +83,7 @@ def slic(source_matrix):
                     temp_gradient = gradient_magnitude[i][j]
 
                     if temp_gradient < min_gradient:
+                        min_gradient = temp_gradient
                         center[c] = (i, j)
                         r = source_matrix[i][j][0]
                         g = source_matrix[i][j][1]
@@ -146,20 +147,26 @@ def slic(source_matrix):
             clustered_matrix_border = clustered_matrix.copy()
 
             count = 1
+            drawn_pixel = np.zeros((row, col))
             for i in range(len(cluster_list_xy)):
                 for pixel in cluster_list_xy[i]:
                     y, x = pixel
+                    is_border = False
 
                     if 0 < x < col - 1 and 0 < y < row - 1:
-                        for a in range(y - 1, y + 2):
-                            for b in range(x - 1, x + 2):
-                                if (a, b) not in cluster_list_xy[i]:
-                                    clustered_matrix_border[y][x] = [0, 0, 0]
+                        for p in range(y - 1, y + 2):
+                            for q in range(x - 1, x + 2):
+                                r, g, b = clustered_matrix_border[p][q]
+                                if (p, q) not in cluster_list_xy[i]:
+                                    is_border = True
+                                    drawn_pixel[p][q] = 1
+
+                        if is_border and drawn_pixel[y][x] == 0:
+                            clustered_matrix_border[y][x] = [0, 0, 0]
 
                     x = int(count * 100 / (row * col))
                     print('Generating clustered image with border: ' + '-' * x + '> ' + str(x) + '%')
                     count += 1
 
-    return clustered_matrix_border
-
+    return clustered_matrix, clustered_matrix_border
 
