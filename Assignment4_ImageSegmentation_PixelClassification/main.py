@@ -52,8 +52,8 @@ def main():
         Path(result_dir).mkdir()
 
     kmeans_segmentation()
-    # SLIC()
-    # pixel_classification()
+    SLIC()
+    pixel_classification()
 
 
 if __name__ == '__main__':
